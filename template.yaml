@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  test-task
+  
+  Sample SAM Template for test-task
+
+Parameters:
+  CodeUriBucket:
+    Type: String
+  CodeUriKey:
+    Type: String
+
+Resources:
+  TestTaskLambdaFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: TestTaskLambdaFunctionLogsPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+        - PolicyName: TestTaskLambdaFunctionDynamoDbPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                - dynamodb:*
+                Resource: "*"
+
+  TestTaskTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: test-task-table
+      AttributeDefinitions:
+        - AttributeName: recordId
+          AttributeType: S
+        - AttributeName: orgId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: recordId
+          KeyType: HASH
+        - AttributeName: orgId
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  TestTaskCreateRecord:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: !GetAtt 'TestTaskLambdaFunctionRole.Arn'
+      CodeUri:
+        Bucket: !Ref CodeUriBucket
+        Key: !Ref CodeUriKey
+      Handler: TestTaskCreateRecord::handleRequest
+      Runtime: java17
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 30
