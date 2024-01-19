@@ -2,17 +2,17 @@ package dto;
 
 public class TestTaskCreateResponse {
 
-  private String message;
+  private String recordId;
 
-  public TestTaskCreateResponse(String message) {
-    this.message = message;
+  public TestTaskCreateResponse(String recordId) {
+    this.recordId = recordId;
   }
 
-  public String getMessage() {
-    return message;
+  public String getRecordId() {
+    return recordId;
   }
 
-  public void setMessage(String message) {
-    this.message = message;
+  public void setRecordId(String recordId) {
+    this.recordId = recordId;
   }
 }

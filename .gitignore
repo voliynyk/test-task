@@ -1,0 +1,5 @@
+**/.aws-sam/
+/HelloWorldFunction/target/
+/.idea/
+**/*.iml
+/HelloWorldFunction/dependency-reduced-pom.xml
