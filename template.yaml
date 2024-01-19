@@ -64,7 +64,7 @@ Resources:
             - AttributeName: orgId
               KeyType: HASH
           Projection:
-            ProjectionType: KEYS_ONLY
+            ProjectionType: ALL
           ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
@@ -253,6 +253,10 @@ Resources:
       ApiKeyRequired: false
       AuthorizationType: NONE
       HttpMethod: GET
+      MethodResponses:
+        - ResponseModels:
+            application/json: !Ref TestTaskApiGatewayModel
+          StatusCode: 200
       Integration:
         IntegrationResponses:
           - StatusCode: 200
